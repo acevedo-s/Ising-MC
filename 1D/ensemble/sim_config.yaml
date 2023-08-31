@@ -1,4 +1,4 @@
-seed: 1424
+seed: 120
 model:
     L: 1024
     h: 0

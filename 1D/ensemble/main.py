@@ -5,7 +5,7 @@ import sys
 import time
 
 eps = 1E-6
-resultsfolder0 = f'/scratch/sacevedo/L{cfg.model.L}_seed_{cfg.seed}_Nsweeps_{cfg.mc.Nsweeps}/'  
+resultsfolder0 = f'/scratch/sacevedo/Ising-chain/canonical/L{cfg.model.L}_seed_{cfg.seed}_Nsweeps_{cfg.mc.Nsweeps}/'  
 
 key0 = jax.random.PRNGKey(cfg.seed)
 spins0 = jax.numpy.zeros(shape=cfg.model.L,dtype=int)

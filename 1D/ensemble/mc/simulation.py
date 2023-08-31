@@ -48,14 +48,18 @@ jax.tree_util.register_pytree_node(Simulation,
                                Simulation._tree_unflatten)
 
 def save_hyperparameters(sim):
-    filename = sim.resultsfolder+'hyperparameters.txt'
+    filename = sim.resultsfolder+'hyperp.txt'
     os.system(f'rm -f {filename}')
     with open(filename,'a') as f:
         np.savetxt(f,[
                       sim.model.h,
-                      sim.Ntherm,
-                      sim.Nsamples,
-                      sim.Nsweeps,
+                      cfg.mc.T0,
+                      cfg.mc.Tf,
+                      cfg.mc.dT,
+                      cfg.mc.Ntherm0,
+                      cfg.mc.Ntherm,
+                      cfg.mc.Nsamples,
+                      cfg.mc.Nsweeps,
                       ],delimiter='\t',fmt='%.3f')
     return
 

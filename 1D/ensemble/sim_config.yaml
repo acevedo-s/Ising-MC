@@ -1,0 +1,12 @@
+seed: 1424
+model:
+    L: 1024
+    h: 0
+mc:
+    T0: 4
+    Tf: .1
+    dT: .1
+    Ntherm0: 15000
+    Ntherm: 1000
+    Nsamples: 750
+    Nsweeps: 1

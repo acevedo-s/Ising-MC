@@ -1,0 +1,12 @@
+seed: 2
+model:
+    L: 512
+    h: 0
+mc:
+    T0: 4
+    Tf: .5
+    dT: .1
+    Ntherm0: 2000
+    Ntherm: 1000
+    Nsamples: 10000
+    Nsweeps: 300

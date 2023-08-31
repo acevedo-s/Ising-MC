@@ -53,9 +53,13 @@ def save_hyperparameters(sim):
     with open(filename,'a') as f:
         np.savetxt(f,[
                       sim.model.h,
-                      sim.Ntherm,
-                      sim.Nsamples,
-                      sim.Nsweeps,
+                      cfg.mc.T0,
+                      cfg.mc.Tf,
+                      cfg.mc.dT,
+                      cfg.mc.Ntherm0,
+                      cfg.mc.Ntherm,
+                      cfg.mc.Nsamples,
+                      cfg.mc.Nsweeps,
                       ],delimiter='\t',fmt='%.3f')
     return
 

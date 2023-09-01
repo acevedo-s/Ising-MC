@@ -14,6 +14,8 @@ config.update('jax_platform_name', 'cpu')
 
 parser = ArgumentParser(default_config_files=['./sim_config.yaml'])
 parser.add_argument('--seed', type=int)
+parser.add_argument('--model.J1', type=float)
+parser.add_argument('--model.J2', type=float)
 parser.add_argument('--model.L', type=int)
 parser.add_argument('--model.h', type=float)
 parser.add_argument('--mc.T0', type=float)

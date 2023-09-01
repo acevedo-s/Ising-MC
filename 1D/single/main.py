@@ -5,7 +5,11 @@ import sys
 import time
 
 eps = 1E-6
-resultsfolder0 = f'/scratch/sacevedo/Ising-chain/canonical/L{cfg.model.L}_seed_{cfg.seed}/'
+if np.isclose(cfg.model.J2,0):
+  geometry = 'Ising-chain'
+else:
+  geometry = 'Ising-square'
+resultsfolder0 = f'/scratch/sacevedo/{geometry}/canonical/L{cfg.model.L}_seed_{cfg.seed}/'
 os.makedirs(resultsfolder0,exist_ok=True)
 
 key0 = jax.random.PRNGKey(cfg.seed)
@@ -17,8 +21,10 @@ key0, subkey = jax.random.split(key0, num=2)
 model = Model(key=key0,
               spins=spins0,
               T=cfg.mc.T0,
+              h=cfg.model.h,
               L=cfg.model.L,
-              h=cfg.model.h,)
+              J1=cfg.model.J1,
+              J2=cfg.model.J2,)
 model = init_state(model)
 
 sim = Simulation(samples=samples0,

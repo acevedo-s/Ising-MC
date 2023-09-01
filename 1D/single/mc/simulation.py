@@ -52,7 +52,7 @@ def save_hyperparameters(sim):
     os.system(f'rm -f {filename}')
     with open(filename,'a') as f:
         np.savetxt(f,[
-                      sim.model.h,
+                      cfg.model.h,
                       cfg.mc.T0,
                       cfg.mc.Tf,
                       cfg.mc.dT,

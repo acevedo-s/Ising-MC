@@ -30,9 +30,16 @@ def T_flip_spin_idx(rand_idx,model):
 
 @jax.jit
 def delta_E(rand_idx,model):
-  model.dE =  (2 * model.spins[rand_idx] * (model.spins[(rand_idx-1)%model.L] + model.spins[(rand_idx+1)%model.L]))
+  model.dE =  model.J1 * (2 * model.spins[rand_idx] * 
+              (model.spins[(rand_idx-1)%model.L] +
+               model.spins[(rand_idx+1)%model.L])
+               )
+  model.dE += model.J2 * (2 * model.spins[rand_idx] * 
+              (model.spins[(rand_idx-(jnp.sqrt(model.L)).astype(int))%model.L] +
+               model.spins[(rand_idx+(jnp.sqrt(model.L)).astype(int))%model.L])
+               )
   # call(lambda x: print(f'dE={x}'),model.dE)
-  dh = (model.h*2*model.spins[rand_idx])
+  dh = (model.h * 2 * model.spins[rand_idx])
   model.dE += dh
   model.dE = model.dE[0]
   return model

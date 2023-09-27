@@ -9,7 +9,7 @@ def read_last_seed(path):
 # max_seed = min_seed + n_seeds
 # seed_list = list(range(min_seed,max_seed+1,2))
 
-seed_list = range(0,3000)
+seed_list = range(0,5000)
 
 for seed in seed_list:
   old_seed = read_last_seed('sim_config.yaml')

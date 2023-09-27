@@ -1,14 +1,14 @@
-seed: 4
+seed: 2
 model:
     J1: 1
     J2: 1
-    L: 1024
+    L: 10000
     h: 0
 mc:
-    T0: 3
-    Tf: 1.5
-    dT: .01
-    Ntherm0: 4000
+    T0: 4
+    Tf: 3
+    dT: .1
+    Ntherm0: 800
     Ntherm: 100
     Nsamples: 5000
-    Nsweeps: 300
+    Nsweeps: 50

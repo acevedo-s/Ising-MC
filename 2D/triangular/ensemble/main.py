@@ -25,16 +25,17 @@ model = Model(key=key0,
               h=cfg.model.h,
               )
 model = init_state(model)
+print(model.E/model.L/model.L)
 
-sim = Simulation(samples=samples0,
-                 model=model,
-                 Tf=cfg.mc.Tf,
-                 dT=cfg.mc.dT,
-                 Ntherm=cfg.mc.Ntherm0,
-                 Nsamples=cfg.mc.Nsamples,
-                 Nsweeps=cfg.mc.Nsweeps,
-                 resultsfolder=resultsfolder0
-                 )
+# sim = Simulation(samples=samples0,
+#                  model=model,
+#                  Tf=cfg.mc.Tf,
+#                  dT=cfg.mc.dT,
+#                  Ntherm=cfg.mc.Ntherm0,
+#                  Nsamples=cfg.mc.Nsamples,
+#                  Nsweeps=cfg.mc.Nsweeps,
+#                  resultsfolder=resultsfolder0
+#                  )
 
 if False:
   save_hyperparameters(sim)

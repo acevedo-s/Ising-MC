@@ -22,13 +22,11 @@ class Simulation:
         self.model = model
         self.Tf = Tf
         self.dT = dT
-        self.Ntherm = Ntherm # (1)
+        self.Ntherm = Ntherm
         self.Nsamples = Nsamples
         self.Nsweeps = Nsweeps
         self.resultsfolder=resultsfolder
         os.makedirs(resultsfolder,exist_ok=True)
-    """(1) Ntherm=cfg.mc.Ntherm0 in thermalization, but 
-           Ntherm=cfg.mc.Ntherm in annealing..."""
 
     def _tree_flatten(self):
         children = (self.samples,
@@ -50,11 +48,11 @@ jax.tree_util.register_pytree_node(Simulation,
                                Simulation._tree_unflatten)
 
 def save_hyperparameters(sim):
-    filename = sim.resultsfolder+f'hyperp.txt'
+    filename = sim.resultsfolder+'hyperp.txt'
     os.system(f'rm -f {filename}')
     with open(filename,'a') as f:
         np.savetxt(f,[
-                      cfg.model.h,
+                      sim.model.h,
                       cfg.mc.T0,
                       cfg.mc.Tf,
                       cfg.mc.dT,

@@ -11,10 +11,7 @@ class Model:
                  dE=0,
                  T=None,
                  h=None,
-                 L=None,
-                 J1=None,
-                 J2=None,
-                 ):
+                 L=None,):
         self.key = key
         self.spins = spins
         self.E = E
@@ -22,19 +19,13 @@ class Model:
         self.T = T
         self.h = h
         self.L = L
-        self.J1 = J1
-        self.J2 = J2
     def _tree_flatten(self):
         children = (self.key,
                     self.spins,
                     self.E,self.dE,
                     self.T,
-                    self.h,
-                    )  # arrays / dynamic values
-        aux_data = {'L':self.L,
-                    'J1':self.J1,
-                    'J2':self.J2,
-                    }  # static values
+                    self.h,)  # arrays / dynamic values
+        aux_data = {'L': self.L}  # static values
         return (children, aux_data)
 
     @classmethod
@@ -49,15 +40,14 @@ jax.tree_util.register_pytree_node(Model,
 def init_state(model):
     model.key, subkey = jax.random.split(model.key, num=2)
     model.spins = 2*jax.random.randint(subkey, (model.L,), minval=0, maxval=2)-1
-    # model = energy(model)
+    model = energy(model)
     call(lambda x: print(f''),1)
     call(lambda x: print(f'L={x}'),model.L)
     return model
 
 @jax.jit
 def _energy(i,model):
-  model.E -= model.J1 * model.spins[i]*model.spins[(i+1)%model.L]
-  model.E -= model.J2 * model.spins[i]*model.spins[(i+(jnp.sqrt(model.L)).astype(int))%model.L]
+  model.E -= model.spins[i]*model.spins[(i+1)%model.L]
   return model
 
 @jax.jit

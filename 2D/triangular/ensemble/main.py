@@ -5,35 +5,22 @@ import sys
 import time
 
 eps = 1E-6
-if np.isclose(cfg.model.J2,0):
-  geometry = 'Ising-chain'
-else:
-  geometry = 'Ising-square'
-resultsfolder0 = f'/scratch/sacevedo/{geometry}/canonical/L{cfg.model.L}_seed_{cfg.seed}/'
-os.makedirs(resultsfolder0,exist_ok=True)
+resultsfolder0 = f'/scratch/sacevedo/Ising-triang/canonical/L{cfg.model.L}_seed_{cfg.seed}/'  
 
 key0 = jax.random.PRNGKey(cfg.seed)
-key0, subkey = jax.random.split(key0, num=2)
-
-if cfg.mc.load_spins==0:
-  spins0 = jax.numpy.zeros(shape=cfg.model.L,dtype=int)
-elif cfg.mc.load_spins==1:
-  spins0 = jnp.load(f'{resultsfolder0}T{cfg.mc.T0:.2f}.npy')[-1]
+spins0 = jax.numpy.zeros(shape=(cfg.model.L,
+                                cfg.model.L),
+                                dtype=int)
 samples0 = jax.numpy.zeros(shape=(cfg.mc.Nsamples,cfg.model.L),dtype=int)
+
+key0, subkey = jax.random.split(key0, num=2)
 
 model = Model(key=key0,
               spins=spins0,
               T=cfg.mc.T0,
-              h=cfg.model.h,
               L=cfg.model.L,
-              J1=cfg.model.J1,
-              J2=cfg.model.J2,)
-if cfg.mc.load_spins==0:
-  model = init_state(model)
-elif cfg.mc.load_spins==1:
-  model.T -= cfg.mc.dT
-  # print(model.spins[:20])
-
+              h=cfg.model.h,)
+model = init_state(model)
 
 sim = Simulation(samples=samples0,
                  model=model,
@@ -45,7 +32,7 @@ sim = Simulation(samples=samples0,
                  resultsfolder=resultsfolder0
                  )
 
-if cfg.mc.load_spins==0:
+if True:
   save_hyperparameters(sim)
   print(f'thermalisation started ; {cfg.seed=}')
   start = time.time()
@@ -56,7 +43,6 @@ if True:
   start = time.time()
   sim = annealing(sim)
   print(f'annealing took {(time.time()-start)/60:.2f} minutes')
-  # print(sim.samples[-1,:20])
 
 
 # if cfg.model.b == 0 and cfg.model.h==0:

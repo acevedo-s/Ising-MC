@@ -11,7 +11,10 @@ key0 = jax.random.PRNGKey(cfg.seed)
 spins0 = jax.numpy.zeros(shape=(cfg.model.L,
                                 cfg.model.L),
                                 dtype=int)
-samples0 = jax.numpy.zeros(shape=(cfg.mc.Nsamples,cfg.model.L),dtype=int)
+samples0 = jax.numpy.zeros(shape=(cfg.mc.Nsamples,
+                                  cfg.model.L,
+                                  cfg.model.L),
+                          dtype=int)
 
 key0, subkey = jax.random.split(key0, num=2)
 
@@ -19,7 +22,8 @@ model = Model(key=key0,
               spins=spins0,
               T=cfg.mc.T0,
               L=cfg.model.L,
-              h=cfg.model.h,)
+              h=cfg.model.h,
+              )
 model = init_state(model)
 
 sim = Simulation(samples=samples0,
@@ -32,14 +36,14 @@ sim = Simulation(samples=samples0,
                  resultsfolder=resultsfolder0
                  )
 
-if True:
+if False:
   save_hyperparameters(sim)
   print(f'thermalisation started ; {cfg.seed=}')
   start = time.time()
   sim = thermalisation(sim)
   print(f'thermalisation took {(time.time()-start)/60:.2f} minutes')
 
-if True:
+if False:
   start = time.time()
   sim = annealing(sim)
   print(f'annealing took {(time.time()-start)/60:.2f} minutes')

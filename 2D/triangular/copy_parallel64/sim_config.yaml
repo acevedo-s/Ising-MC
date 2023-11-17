@@ -1,6 +1,6 @@
-seed: 21
+seed: 5
 model:
-    L: 32
+    L: 64
     h: 0
 mc:
     T0: 4

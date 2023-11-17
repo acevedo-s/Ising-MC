@@ -54,7 +54,7 @@ if True:
   np.savetxt(fname=f'results/thermo.txt',
              X=np.transpose([T_list,S,E_mean,Cv]),fmt='%1.3f')
   fig,ax = plt.subplots(1)
-  ax.plot(T_list,E_mean-E0,'o',label=r'$E-E_0/N$')
+  ax.plot(T_list,E_mean-E0,'o',label=r'$(E-E_0)/N$')
   ax.plot(T_list,Cv,'o',label='Cv/N')
   ax.plot(T_list,S,'o',label='S/N')
   ax.hlines(S0,T_list[0],T_list[-1],label=r'$S_0(N=\infty)$')

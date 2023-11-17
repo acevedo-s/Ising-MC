@@ -101,9 +101,13 @@ def run_sim(sim):
 def annealing(sim):
     sim.Ntherm = cfg.mc.Ntherm
     while(sim.model.T > sim.Tf - eps):
-        print(f'{sim.model.T=:.2f}')
-        sim = thermalisation(sim)
-        sim = run_sim(sim)
-        sim.model.T -= sim.dT
+      if sim.model.T >= 2 + cfg.mc.dT/2:
+        sim.dT = 2 * cfg.mc.dT
+      else:
+        sim.dT = cfg.mc.dT  
+      print(f'{sim.model.T=:.2f}')
+      sim = thermalisation(sim)
+      sim = run_sim(sim)
+      sim.model.T -= sim.dT
     return sim
 

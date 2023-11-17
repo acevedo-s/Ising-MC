@@ -1,4 +1,4 @@
-seed: 21
+seed: 1
 model:
     L: 32
     h: 0

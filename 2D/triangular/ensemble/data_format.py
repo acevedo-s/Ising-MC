@@ -3,11 +3,15 @@ import os
 
 datafolder0 = f'/scratch/sacevedo/Ising-triang/canonical/'
 eps = 1E-6
-L = 32
-n_seeds = 650
-T_list = np.arange(0,3+eps,0.05)
+L = 48#64
+n_seeds = 2#800
+T_list = np.arange(0.05,2+eps,0.05)
+T_list = np.concatenate((T_list,
+                         np.arange(2.1,4,.1))
+                         )
 
 seed_list = range(0,n_seeds)
+# seed_list = [1,2]
 for T_id,T in enumerate(T_list):
   X = np.zeros(shape=(n_seeds,L,L))
   resultsfolder = datafolder0  + f'L{L}/'

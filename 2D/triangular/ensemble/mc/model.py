@@ -57,7 +57,7 @@ def init_state(model):
 @jax.jit
 def _energy_fix_i(j,model):
   model.E += model.spins[model.i,j]*(
-             model.spins[model.i+1,j]
+             model.spins[(model.i+1)%model.L,j]
             +model.spins[model.i,(j+1)%model.L]
             +model.spins[(model.i+1)%model.L,(j-1)%model.L]
           )

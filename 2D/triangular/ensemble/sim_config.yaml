@@ -1,6 +1,6 @@
-seed: 2623
+seed: 571
 model:
-    L: 32
+    L: 100
     h: 0
 mc:
     T0: 4

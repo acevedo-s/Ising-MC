@@ -33,13 +33,13 @@ def energy(X):
                        )
   return E
 
-L_list = np.array([48])
+L_list = np.array([100])
 # T_list = np.arange(0.05,3+eps,.05)
 T_list = np.arange(0.05,2+eps,0.05)
 T_list = np.concatenate((T_list,
                          np.arange(2.1,4,.1))
                          )
-T_list = np.array([0.05])
+# T_list = np.array([0.05])
 
 Ns0 = 10000
 normalize = 1
@@ -90,9 +90,7 @@ if 1:
 
 if 1:
   figh,axh = plt.subplots(1)
-  print(E[:,0])
   counts, bins = np.histogram(E[:,0])
-  print(counts)
   axh.stairs(counts, bins)
   figh.savefig(f'{resultsfolder}E0_hist.png')
 

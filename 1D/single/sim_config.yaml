@@ -2,14 +2,14 @@ seed: 1
 model:
     J1: 1
     J2: 1
-    L: 16
+    L: 16384
     h: 0
 mc:
     T0: 4
-    Tf: .1
+    Tf: 2.5
     dT: .1
-    Ntherm0: 700
-    Ntherm: 700 # 300 # 500
+    Ntherm0: 500
+    Ntherm: 200 # 300 # 500
     Nsamples: 5000
-    Nsweeps: 700 # 700
+    Nsweeps: 100 # 700
     load_spins: 0

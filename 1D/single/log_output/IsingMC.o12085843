@@ -1,0 +1,3 @@
+sim.model.T=3.30
+sim.model.T=3.20
+slurmstepd: error: *** JOB 12085843 ON cn06-36 CANCELLED AT 2024-03-14T09:13:11 DUE TO TIME LIMIT ***

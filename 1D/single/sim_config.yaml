@@ -5,11 +5,11 @@ model:
     L: 16384
     h: 0
 mc:
-    T0: 4
-    Tf: 2.5
+    T0: 2.7
+    Tf: 2.4
     dT: .1
     Ntherm0: 500
-    Ntherm: 200 # 300 # 500
+    Ntherm: 100 # 200 # 300 # 500
     Nsamples: 5000
-    Nsweeps: 100 # 700
-    load_spins: 0
+    Nsweeps: 100 # 100
+    load_spins: 1

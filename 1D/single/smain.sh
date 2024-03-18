@@ -8,4 +8,4 @@
 #SBATCH --output=./log_output/%x.o%j              # Standard output
 #SBATCH --error=./log_output/%x.o%j               # Standard error
 
-python3 main.py
+python3 -u main.py

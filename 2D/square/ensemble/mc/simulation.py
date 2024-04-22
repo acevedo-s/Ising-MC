@@ -1,9 +1,10 @@
 import jax 
 import numpy as np
 import os
-from .config import cfg
 from .dynamics import *
 from tqdm.auto import tqdm
+from params import *
+
 # from functools import partial
 # import jax.experimental.host_callback
 eps = 1E-6
@@ -52,17 +53,15 @@ def save_hyperparameters(sim):
     os.system(f'rm -f {filename}')
     with open(filename,'a') as f:
         np.savetxt(f,[
-                      cfg.model.h,
-                      cfg.mc.T0,
-                      cfg.mc.Tf,
-                      cfg.mc.dT,
-                      cfg.mc.Ntherm0,
-                      cfg.mc.Ntherm,
-                      cfg.mc.Nsamples,
-                      cfg.mc.Nsweeps,
+                      T0,
+                      Tf,
+                      dT,
+                      Ntherm0,
+                      Ntherm,
+                      Nsamples,
+                      Nsweeps,
                       ],delimiter='\t',fmt='%.3f')
     return
-
 
 @jax.jit
 def do_Nsweeps(idx,sim):
@@ -77,7 +76,8 @@ def thermalisation(sim):
     sim =jax.lax.fori_loop(lower=0,
                         upper=sim.Ntherm,
                         body_fun=do_Nsweeps,
-                        init_val=sim)
+                        init_val=sim,
+                        )
     return sim
 
 @jax.jit
@@ -99,12 +99,12 @@ def run_sim(sim):
     return sim
 
 def annealing(sim):
-    sim.Ntherm = cfg.mc.Ntherm
+    sim.Ntherm = Ntherm
     while(sim.model.T > sim.Tf - eps):
-      if sim.model.T >= 2 + cfg.mc.dT/2:
-        sim.dT = 2 * cfg.mc.dT
+      if sim.model.T >= 2 + dT/2:
+        sim.dT = 2 * dT
       else:
-        sim.dT = cfg.mc.dT  
+        sim.dT = dT  
       print(f'{sim.model.T=:.2f}')
       sim = thermalisation(sim)
       sim = run_sim(sim)

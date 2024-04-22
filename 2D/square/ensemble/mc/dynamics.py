@@ -1,7 +1,6 @@
 import jax
 import jax.numpy as jnp
 from jax.experimental.host_callback import call
-from .config import *
 from .model import *
 
 eps = 1E-8

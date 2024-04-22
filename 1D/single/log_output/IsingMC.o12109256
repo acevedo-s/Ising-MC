@@ -1,1 +1,4 @@
 sim.model.T=2.60
+sim.model.T=2.50
+sim.model.T=2.40
+annealing took 2527.76 minutes

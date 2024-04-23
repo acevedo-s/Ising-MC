@@ -10,33 +10,29 @@ from params import *
 eps = 1E-6
 
 class Simulation:
+    """Ntherm is initialized to Ntherm0, to equilibrate at high temperature,
+    then updated to equilibrate between temperatures."""
     def __init__(self,
-                 samples=None,
                  model=None, 
                  Tf=None,
                  dT=None,
-                 Ntherm=None,
-                 Nsamples=None,
-                 Nsweeps=None,
-                 resultsfolder=None):
-        self.samples = samples
+                 Ntherm=None, 
+                 resultsfolder=None,
+                 ):
         self.model = model
         self.Tf = Tf
         self.dT = dT
         self.Ntherm = Ntherm
-        self.Nsamples = Nsamples
-        self.Nsweeps = Nsweeps
         self.resultsfolder=resultsfolder
         os.makedirs(resultsfolder,exist_ok=True)
 
     def _tree_flatten(self):
-        children = (self.samples,
+        children = (
                     self.model,
                     self.Tf,
                     self.dT,
                     self.Ntherm,
-                    self.Nsamples,
-                    self.Nsweeps)  # arrays / dynamic values
+                    )  # arrays / dynamic values
         aux_data = {'resultsfolder':self.resultsfolder}  # static values
         return (children, aux_data)
 
@@ -49,7 +45,7 @@ jax.tree_util.register_pytree_node(Simulation,
                                Simulation._tree_unflatten)
 
 def save_hyperparameters(sim):
-    filename = sim.resultsfolder+'hyperp.txt'
+    filename = sim.resultsfolder+f'hyperp_L{sim.model.L}.txt'
     os.system(f'rm -f {filename}')
     with open(filename,'a') as f:
         np.savetxt(f,[
@@ -58,56 +54,34 @@ def save_hyperparameters(sim):
                       dT,
                       Ntherm0,
                       Ntherm,
-                      Nsamples,
-                      Nsweeps,
                       ],delimiter='\t',fmt='%.3f')
     return
 
 @jax.jit
-def do_Nsweeps(idx,sim):
-    sim.model = jax.lax.fori_loop(lower=0,
-                        upper=sim.Nsweeps,
-                        body_fun=sweep,
-                        init_val=sim.model)
-    return sim
-
-@jax.jit
 def thermalisation(sim):
-    sim =jax.lax.fori_loop(lower=0,
-                        upper=sim.Ntherm,
-                        body_fun=do_Nsweeps,
-                        init_val=sim,
-                        )
-    return sim
+  sim.model =jax.lax.fori_loop(lower=0,
+                              upper=sim.Ntherm,
+                              body_fun=sweep,
+                              init_val=sim.model,
+                              )
+  return sim
 
-@jax.jit
-def _run_sim(idx,sim):
-    sim.model = jax.lax.fori_loop(lower=0,
-                        upper=sim.Nsweeps,
-                        body_fun=sweep,
-                        init_val=sim.model)
-    sim.samples = sim.samples.at[idx].set(sim.model.spins)
-    return sim
-
-def run_sim(sim):
-    sim = jax.lax.fori_loop(lower=0,
-                            upper=sim.Nsamples,
-                            body_fun=_run_sim,
-                            init_val=sim)
-    fname = f'{sim.resultsfolder}T{sim.model.T:.2f}'
-    jnp.save(file=fname,arr=sim.samples[0])
-    return sim
+def export_spins(sim):
+  fname = f'{sim.resultsfolder}seed{sim.model.seed}_T{sim.model.T:.2f}'
+  jnp.save(file=fname,arr=sim.model.spins)
+  return
 
 def annealing(sim):
-    sim.Ntherm = Ntherm
-    while(sim.model.T > sim.Tf - eps):
-      if sim.model.T >= 2 + dT/2:
-        sim.dT = 2 * dT
-      else:
-        sim.dT = dT  
-      print(f'{sim.model.T=:.2f}')
-      sim = thermalisation(sim)
-      sim = run_sim(sim)
-      sim.model.T -= sim.dT
-    return sim
+  sim.Ntherm = Ntherm
+  while(sim.model.T > sim.Tf - eps):
+    if sim.model.T >= 2.5: # high T
+      sim.dT = dT 
+    elif sim.model.T <= 2.20 + dT/10/2: # low T
+      sim.dT = dT  
+    else: sim.dT = dT/10 # critical zone for 2D Ising
+    print(f'T={sim.model.T:.2f}')
+    sim = thermalisation(sim)
+    export_spins(sim)
+    sim.model.T -= sim.dT
+  return sim
 

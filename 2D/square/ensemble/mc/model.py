@@ -5,29 +5,30 @@ from jax.experimental.host_callback import call
 
 class Model:
     def __init__(self, 
+                 seed=None,
                  key=None, 
                  spins=None,
                  E=None,         # energy of spins
                  dE=0,
                  T=None,
-                #  h=None,
                  i=0,
                  L=None,
                  ):
+        self.seed = seed
         self.key = key
         self.spins = spins
         self.E = E
         self.dE = dE
         self.T = T
-        # self.h = h
         self.i = i
         self.L = L
     def _tree_flatten(self):
-        children = (self.key,
+        children = (
+                    self.seed,
+                    self.key,
                     self.spins,
                     self.E,self.dE,
                     self.T,
-                    # self.h,
                     self.i,
                     )  # arrays / dynamic values
         aux_data = {'L': self.L}  # static values
@@ -63,7 +64,7 @@ def _energy_fix_i(j,model):
   #           +model.spins[(model.i+1)%model.L,(j-1)%model.L]
   #         )
   ### Square
-  model.E += model.spins[model.i,j]*(
+  model.E += -model.spins[model.i,j]*(
             model.spins[(model.i+1)%model.L,j]
            +model.spins[model.i,(j+1)%model.L]
         )

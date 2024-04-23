@@ -8,32 +8,28 @@ resultsfolder0 = f'/scratch/sacevedo/Ising-{lattice}/canonical/L{L}/'
 
 key0 = jax.random.PRNGKey(seed)
 spins0 = jax.numpy.zeros(shape=(L,L),dtype=int)
-samples0 = jax.numpy.zeros(shape=(Nsamples,L,L),dtype=int)
 
-key0, subkey = jax.random.split(key0, num=2)
-
-model = Model(key=key0,
+model = Model(seed=seed,
+              key=key0,
               spins=spins0,
               T=T0,
               L=L,
-              # h=h,
               )
 print(f'{T0=:.3f}')
 model = init_state(model)
-print(model.E/L/L)
-sim = Simulation(samples=samples0,
+print(f'e0={model.E/L/L}')
+sim = Simulation(
                  model=model,
                  Tf=Tf,
                  dT=dT,
                  Ntherm=Ntherm0,
-                 Nsamples=Nsamples,
-                 Nsweeps=Nsweeps,
                  resultsfolder=resultsfolder0
                  )
-sys.exit()
+
 
 if 1:
-  save_hyperparameters(sim)
+  if seed==1:
+    save_hyperparameters(sim)
   print(f'thermalisation started ; {seed=}')
   start = time.time()
   sim = thermalisation(sim)
@@ -45,13 +41,12 @@ if 1:
   print(f'annealing took {(time.time()-start)/60:.2f} minutes')
 
 sim.model = energy(sim.model)
-print('E_final=',sim.E/L/L)
-print(sim.spins)
+print('E_final=',sim.model.E/L/L)
+print(f'm={sim.model.spins.sum()/L**2}')
 # if b == 0 and h==0:
 #   E = (L* f_exact_PBC(1/T,L)+
 #        T*L*s_exact_PBC(1/T,L))
 #   print(f'E_exact = {E:.5f}')
-#   states = sim.samples
 #   Es = energy_chain_PBC(states,normalized=0)
 #   meanE = np.mean(Es)
 #   stdE = np.std(Es)

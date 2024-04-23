@@ -31,15 +31,25 @@ def T_flip_spin(rand_i,rand_j,model):
 
 @jax.jit
 def delta_E(rand_i,rand_j,model):
-  model.dE =  -(2 * model.spins[rand_i,rand_j] * 
-               ( model.spins[(rand_i+1)%model.L,rand_j] 
-                +model.spins[(rand_i+1)%model.L,(rand_j-1)%model.L]
-                +model.spins[rand_i,(rand_j-1)%model.L]
-                +model.spins[(rand_i-1)%model.L,rand_j]
-                +model.spins[(rand_i-1)%model.L,(rand_j+1)%model.L]
-                +model.spins[rand_i,(rand_j+1)%model.L]
-                )
-                )
+  ### triangular
+  # model.dE =  -(2 * model.spins[rand_i,rand_j] * 
+              #  ( model.spins[(rand_i+1)%model.L,rand_j] 
+              #   +model.spins[(rand_i+1)%model.L,(rand_j-1)%model.L]
+              #   +model.spins[rand_i,(rand_j-1)%model.L]
+              #   +model.spins[(rand_i-1)%model.L,rand_j]
+              #   +model.spins[(rand_i-1)%model.L,(rand_j+1)%model.L]
+              #   +model.spins[rand_i,(rand_j+1)%model.L]
+              #   )
+              #   )
+  ### square (ferro)
+  model.dE =  (2 * model.spins[rand_i,rand_j] * 
+              (model.spins[(rand_i+1)%model.L,rand_j] +
+               model.spins[rand_i,(rand_j+1)%model.L])
+               )
+  model.dE += (2 * model.spins[rand_i,rand_j] * 
+              (model.spins[(rand_i-1)%model.L,rand_j] +
+               model.spins[rand_i,(rand_j-1)%model.L])
+               )
   # call(lambda x: print(f'dE={x}'),model.dE)
   # dh = (model.h*2*model.spins[rand_idx])
   # model.dE += dh

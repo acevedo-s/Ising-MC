@@ -1,14 +1,14 @@
-seed = 0
-L = 30
+import sys,os
+seed = int(sys.argv[1])
+# seed = int(os.environ['SLURM_ARRAY_TASK_ID'])
+L = int(sys.argv[2])
 lattice = 'square'
 
 T0 = 4
 Tf = .1
 dT = .1
-Ntherm0 = 20000
+Ntherm0 = 10000
 Ntherm = 5000
-Nsamples = 1
-Nsweeps = 1
 
 
 # class Model():

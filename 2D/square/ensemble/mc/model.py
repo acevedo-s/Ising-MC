@@ -13,6 +13,7 @@ class Model:
                  T=None,
                  i=0,
                  L=None,
+                 N=None,
                  ):
         self.seed = seed
         self.key = key
@@ -22,6 +23,7 @@ class Model:
         self.T = T
         self.i = i
         self.L = L
+        self.N = L**2
     def _tree_flatten(self):
         children = (
                     self.seed,
@@ -31,7 +33,7 @@ class Model:
                     self.T,
                     self.i,
                     )  # arrays / dynamic values
-        aux_data = {'L': self.L}  # static values
+        aux_data = {'L': self.L,'N':self.N}  # static values
         return (children, aux_data)
 
     @classmethod

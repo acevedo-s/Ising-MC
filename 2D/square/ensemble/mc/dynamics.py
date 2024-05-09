@@ -72,7 +72,7 @@ def single_spin_flip(idx,model):
 @jax.jit
 def sweep(idx,model):
   model = jax.lax.fori_loop(lower = 0,
-                    upper = model.L,
+                    upper = model.N,
                     body_fun = single_spin_flip,
                     init_val = model)
   return model

@@ -59,7 +59,7 @@ def save_hyperparameters(sim):
 
 @jax.jit
 def thermalisation(sim):
-  sim.model =jax.lax.fori_loop(lower=0,
+  sim.model = jax.lax.fori_loop(lower=0,
                               upper=sim.Ntherm,
                               body_fun=sweep,
                               init_val=sim.model,

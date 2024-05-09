@@ -7,8 +7,8 @@ lattice = 'square'
 T0 = 4
 Tf = .1
 dT = .1
-Ntherm0 = 10000
-Ntherm = 5000
+Ntherm0 = 5000
+Ntherm = 2000
 
 
 # class Model():

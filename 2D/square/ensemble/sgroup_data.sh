@@ -13,4 +13,5 @@
 #SBATCH --error=./log_output/%x.o%j 
 n_seeds=$1
 L=$2
-python3 -u group_data.py $n_seeds $L
+lattice=$3
+python3 -u group_data.py $n_seeds $L $lattice

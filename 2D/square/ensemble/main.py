@@ -14,10 +14,11 @@ model = Model(seed=seed,
               spins=spins0,
               T=T0,
               L=L,
+              square=square,
+              triangular=triangular,
               )
-print(f'{T0=:.3f}')
 model = init_state(model)
-print(f'e0={model.E/L/L}')
+print(f'e0={model.E/L/L:.2f}')
 sim = Simulation(
                  model=model,
                  Tf=Tf,

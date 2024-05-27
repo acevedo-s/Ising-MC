@@ -74,11 +74,13 @@ def export_spins(sim):
 def annealing(sim):
   sim.Ntherm = Ntherm
   while(sim.model.T > sim.Tf - eps):
-    if sim.model.T >= 2.5: # high T
-      sim.dT = dT 
-    elif sim.model.T <= 2.20 + dT/10/2: # low T
-      sim.dT = dT  
-    else: sim.dT = dT/10 # critical zone for 2D Ising
+    if sim.model.square:
+      if sim.model.T >= 2.5: # high T
+        sim.dT = dT 
+      elif sim.model.T <= 2.20 + dT/10/2: # low T
+        sim.dT = dT  
+      else: 
+        sim.dT = dT/10 # critical zone
     print(f'T={sim.model.T:.2f}')
     sim = thermalisation(sim)
     export_spins(sim)

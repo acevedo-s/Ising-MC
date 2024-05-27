@@ -1,4 +1,4 @@
 mc/__pycache__/
 results/
 log_output
-nohup.out
+*.out

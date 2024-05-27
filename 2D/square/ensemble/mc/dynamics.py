@@ -3,7 +3,7 @@ import jax.numpy as jnp
 from jax.experimental.host_callback import call
 from .model import *
 
-eps = 1E-8
+eps = 1E-6
 
 @jax.jit
 def update_state(rand_i,rand_j,model):
@@ -29,19 +29,7 @@ def T_flip_spin(rand_i,rand_j,model):
                        rand_i,rand_j,model)
   return model
 
-@jax.jit
-def delta_E(rand_i,rand_j,model):
-  ### triangular
-  # model.dE =  -(2 * model.spins[rand_i,rand_j] * 
-              #  ( model.spins[(rand_i+1)%model.L,rand_j] 
-              #   +model.spins[(rand_i+1)%model.L,(rand_j-1)%model.L]
-              #   +model.spins[rand_i,(rand_j-1)%model.L]
-              #   +model.spins[(rand_i-1)%model.L,rand_j]
-              #   +model.spins[(rand_i-1)%model.L,(rand_j+1)%model.L]
-              #   +model.spins[rand_i,(rand_j+1)%model.L]
-              #   )
-              #   )
-  ### square (ferro)
+def delta_E_square(rand_i,rand_j,model):
   model.dE =  (2 * model.spins[rand_i,rand_j] * 
               (model.spins[(rand_i+1)%model.L,rand_j] +
                model.spins[rand_i,(rand_j+1)%model.L])
@@ -50,6 +38,30 @@ def delta_E(rand_i,rand_j,model):
               (model.spins[(rand_i-1)%model.L,rand_j] +
                model.spins[rand_i,(rand_j-1)%model.L])
                )
+  return model 
+
+def delta_E_triangular(rand_i,rand_j,model):
+  model.dE =  -(2 * model.spins[rand_i,rand_j] * 
+                      ( model.spins[(rand_i+1)%model.L,rand_j] 
+                        +model.spins[(rand_i+1)%model.L,(rand_j-1)%model.L]
+                        +model.spins[rand_i,(rand_j-1)%model.L]
+                        +model.spins[(rand_i-1)%model.L,rand_j]
+                        +model.spins[(rand_i-1)%model.L,(rand_j+1)%model.L]
+                        +model.spins[rand_i,(rand_j+1)%model.L]
+                        )
+                        )
+  return model
+
+@jax.jit
+def delta_E(rand_i,rand_j,model):
+  model = jax.lax.cond(model.square,
+                      delta_E_square,
+                      do_nothing,
+                      rand_i,rand_j,model)
+  model = jax.lax.cond(model.triangular,
+                      delta_E_triangular,
+                      do_nothing,
+                      rand_i,rand_j,model)
   # call(lambda x: print(f'dE={x}'),model.dE)
   # dh = (model.h*2*model.spins[rand_idx])
   # model.dE += dh
@@ -64,9 +76,9 @@ def single_spin_flip(idx,model):
   model = delta_E(rand_i,rand_j,model)
   # call(lambda x: print(f'dE={x}'),model.dE)
   model = jax.lax.cond(model.dE<=eps,
-               update_state,
-               T_flip_spin,
-               rand_i,rand_j,model)
+                      update_state,
+                      T_flip_spin,
+                      rand_i,rand_j,model)
   return model
 
 @jax.jit

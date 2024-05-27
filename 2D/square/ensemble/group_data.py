@@ -1,25 +1,27 @@
 import numpy as np 
 import os,sys
 
-datafolder0 = f'/scratch/sacevedo/Ising-square/canonical/'
 eps = 1E-6
 n_seeds = int(sys.argv[1])
+print(f'{n_seeds=}')
 L = int(sys.argv[2])
-### triangular
-# T_list = np.arange(1,2+eps,0.1)
-# T_list = np.concatenate((T_list,
-#                          np.arange(2.1,4+eps,.1))
-#                          )
-T_list = np.arange(1,2.1+eps,0.1)
-T_list = np.concatenate((T_list,
-                         np.arange(2.2,2.4+eps,.01))
+print(f'{L=}')
+lattice = sys.argv[3]
+print(f'{lattice=}')
+datafolder0 = f'/scratch/sacevedo/Ising-{lattice}/canonical/'
+
+if lattice ==  'triangular':
+  T_list = np.arange(.1,4+eps,0.1)
+elif lattice == 'square':
+  T_list = np.arange(1,2.1+eps,0.1)
+  T_list = np.concatenate((T_list,
+                          np.arange(2.2,2.4+eps,.01))
                          )
-T_list = np.concatenate((T_list,
+  T_list = np.concatenate((T_list,
                          np.arange(2.5,4+eps,.1))
                          )
 
 seed_list = range(1,n_seeds+1)
-# seed_list = [1,2]
 for T_id,T in enumerate(T_list):
   print(f'{T=:.2f}')
   X = np.zeros(shape=(n_seeds,L,L))

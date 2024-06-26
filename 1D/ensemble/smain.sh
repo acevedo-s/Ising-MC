@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=MC
+#SBATCH --job-name=CHAIN
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=12:00:00
@@ -11,4 +11,9 @@
 # SBATCH --error=./log_output/%x.o%A-%a    # Standard error
 #SBATCH --output=./log_output/%x.o%j
 #SBATCH --error=./log_output/%x.o%j 
-python3 -u main.py $1 $2 # seed, L
+
+seed=$1
+L=$2
+r_id=$3
+
+python3 -u main.py "$seed" "$L" "$r_id"

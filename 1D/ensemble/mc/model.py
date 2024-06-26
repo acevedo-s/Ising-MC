@@ -7,24 +7,23 @@ class Model:
     def __init__(self, 
                  key=None, 
                  spins=None,
-                 E=None,         # energy of spins
+                 E=None,
                  dE=0,
                  T=None,
-                 h=None,
                  L=None,):
         self.key = key
         self.spins = spins
         self.E = E
         self.dE = dE
         self.T = T
-        self.h = h
         self.L = L
     def _tree_flatten(self):
-        children = (self.key,
+        children = (
+                    self.key,
                     self.spins,
                     self.E,self.dE,
                     self.T,
-                    self.h,)  # arrays / dynamic values
+                    )  # arrays / dynamic values
         aux_data = {'L': self.L}  # static values
         return (children, aux_data)
 
@@ -41,8 +40,8 @@ def init_state(model):
     model.key, subkey = jax.random.split(model.key, num=2)
     model.spins = 2*jax.random.randint(subkey, (model.L,), minval=0, maxval=2)-1
     model = energy(model)
-    call(lambda x: print(f''),1)
-    call(lambda x: print(f'L={x}'),model.L)
+    # call(lambda x: print(f''),1)
+    # call(lambda x: print(f'L={x}'),model.L)
     return model
 
 @jax.jit

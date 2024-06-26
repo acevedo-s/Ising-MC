@@ -1,7 +1,6 @@
 import jax
 import jax.numpy as jnp
 from jax.experimental.host_callback import call
-from .config import *
 from .model import *
 
 eps = 1E-8
@@ -9,7 +8,6 @@ eps = 1E-8
 @jax.jit
 def update_state(rand_idx,model):
   model.spins = model.spins.at[rand_idx].set((-1) * model.spins[rand_idx])
-  # model.E += model.dE
   return model
 
 @jax.jit
@@ -32,8 +30,8 @@ def T_flip_spin_idx(rand_idx,model):
 def delta_E(rand_idx,model):
   model.dE =  (2 * model.spins[rand_idx] * (model.spins[(rand_idx-1)%model.L] + model.spins[(rand_idx+1)%model.L]))
   # call(lambda x: print(f'dE={x}'),model.dE)
-  dh = (model.h*2*model.spins[rand_idx])
-  model.dE += dh
+  # dh = (model.h*2*model.spins[rand_idx])
+  # model.dE += dh
   model.dE = model.dE[0]
   return model
 

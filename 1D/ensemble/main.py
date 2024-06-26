@@ -1,58 +1,52 @@
 import jax
-import numpy as np
 from mc import *
-import sys
-import time
+from params import * 
 
 eps = 1E-6
-resultsfolder0 = f'/scratch/sacevedo/Ising-chain/canonical/L{cfg.model.L}_seed_{cfg.seed}_Nsweeps_{cfg.mc.Nsweeps}/'  
+resultsfolder0 = f'/scratch/sacevedo/{lattice}/canonical/L{L}/r_id{r_id}/seed{seed}/'  
 
-key0 = jax.random.PRNGKey(cfg.seed)
-spins0 = jax.numpy.zeros(shape=cfg.model.L,dtype=int)
-samples0 = jax.numpy.zeros(shape=(cfg.mc.Nsamples,cfg.model.L),dtype=int)
+key0 = jax.random.PRNGKey(seed)
+spins0 = jax.numpy.zeros(shape=L,dtype=int)
 
 key0, subkey = jax.random.split(key0, num=2)
 
-model = Model(key=key0,
+model = Model(
+              key=key0,
               spins=spins0,
-              T=cfg.mc.T0,
-              L=cfg.model.L,
-              h=cfg.model.h,)
+              T=T0,
+              L=L,
+              )
 model = init_state(model)
-
-sim = Simulation(samples=samples0,
+model = energy(model)
+print(f'initial E:{model.E/model.L}')
+sim = Simulation(
                  model=model,
-                 Tf=cfg.mc.Tf,
-                 dT=cfg.mc.dT,
-                 Ntherm=cfg.mc.Ntherm0,
-                 Nsamples=cfg.mc.Nsamples,
-                 Nsweeps=cfg.mc.Nsweeps,
+                 Tf=Tf,
+                 dT=dT,
+                 Ntherm=Ntherm0,
                  resultsfolder=resultsfolder0
                  )
 
-if True:
-  save_hyperparameters(sim)
-  print(f'thermalisation started ; {cfg.seed=}')
-  start = time.time()
+if 1:
+  if seed==1:
+    save_hyperparameters(sim)
+  print(f'thermalisation started ; {seed=}')
+  start = time()
   sim = thermalisation(sim)
-  print(f'thermalisation took {(time.time()-start)/60:.2f} minutes')
+  print(f'thermalisation took {(time()-start)/60:.2f} minutes')
 
-if True:
-  start = time.time()
+if False:
+  start = time()
   sim = annealing(sim)
-  print(f'annealing took {(time.time()-start)/60:.2f} minutes')
+  print(f'annealing took {(time()-start)/60:.2f} minutes')
 
+sim.model = energy(sim.model)
+print(f'final e:{sim.model.E/sim.model.L}')
+E_exact = (f_exact_PBC(1/sim.model.T,sim.model.L)+
+            sim.model.T * s_exact_PBC(1/sim.model.T,sim.model.L))
+print(f'E_exact = {E_exact:.5f}')
 
-# if cfg.model.b == 0 and cfg.model.h==0:
-#   E = (model.L* f_exact_PBC(1/model.T,model.L)+
-#        model.T*model.L*s_exact_PBC(1/model.T,model.L))
-#   print(f'E_exact = {E:.5f}')
-#   states = sim.samples
-#   Es = energy_chain_PBC(states,normalized=0)
-#   meanE = np.mean(Es)
-#   stdE = np.std(Es)
-#   print(f'<E>={meanE:.3f}+-{stdE:.3f}')
-
+export_spins(sim,seed)
 
 
 

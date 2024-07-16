@@ -26,4 +26,5 @@ for T_id,T in enumerate(T_list):
   np.savetxt(resultsfolder+f'T{T:.2f}.txt',
               np.reshape(X,(n_seeds,L))
               )
+print(f'finito')
   

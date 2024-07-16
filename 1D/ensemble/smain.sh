@@ -2,8 +2,8 @@
 #SBATCH --job-name=MC-CHAIN
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=6:00:00
-#SBATCH --mem=20G
+#SBATCH --time=2:00:00
+#SBATCH --mem=12G
 #SBATCH --partition=regular2,regular1
 # SBATCH --qos=fastlane # for debugging
 # SBATCH --array=1-1

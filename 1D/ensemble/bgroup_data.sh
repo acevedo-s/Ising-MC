@@ -4,8 +4,8 @@ mkdir -p log_group
 
 n_seeds=$1
 L=$2
-Nrealizations=44
-r_idmin=25
+Nrealizations=49
+r_idmin=45
 
 for (( r_id=r_idmin; r_id<Nrealizations; r_id++ ))
 do

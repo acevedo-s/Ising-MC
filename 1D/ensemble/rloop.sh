@@ -4,12 +4,12 @@ mkdir -p log_output
 
 n_seeds=$1
 L=$2
-Nrealizations=75
-r_idmin=44
+r_idmax=100
+r_idmin=74
 
 DEPENDENCY_ID=$(sbatch bloop.sh "$n_seeds" "$L" "$r_idmin" | awk '{print $4}')
 echo dependency: "$DEPENDENCY_ID"
-for (( r_id=r_idmin+1; r_id<Nrealizations; r_id++ ))
+for (( r_id=r_idmin+1; r_id<r_idmax; r_id++ ))
 do
   DEPENDENCY_ID=$(sbatch --dependency=afterok:"$DEPENDENCY_ID" bloop.sh "$n_seeds" "$L" "$r_id" | awk '{print $4}')
   sleep 0.05

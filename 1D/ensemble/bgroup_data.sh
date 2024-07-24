@@ -2,10 +2,10 @@
 
 mkdir -p log_group
 
-n_seeds=$1
-L=$2
-r_idmax=22
-r_idmin=44
+n_seeds=5000
+L=10000
+r_idmin=56
+r_idmax=70
 
 for (( r_id=r_idmin; r_id<=r_idmax; r_id++ ))
 do
